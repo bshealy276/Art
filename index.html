@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Izabella Shealy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f6f4f1;
+  --ink: #0c0b09;
+  --mid: #8a8784;
+  --blue: #4f8ba3;
+  --blue-light: #8db8cc;
+  --blue-mist: #daeaf1;
+  --serif: 'Cormorant', Georgia, serif;
+  --display: 'Tenor Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --pad: 3rem;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* ── Square cursor ── */
+#cur {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--blue);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transition: width 0.35s cubic-bezier(0.16,1,0.3,1),
+              height 0.35s cubic-bezier(0.16,1,0.3,1),
+              transform 0.5s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.3s;
+}
+#cur.big {
+  width: 36px;
+  height: 36px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+#cur-dot {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: var(--blue);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.2rem var(--pad);
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.4;
+  transition: opacity 0.35s;
+}
+.nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--blue); }
+
+/* ── Pages ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ════════════ HOME ════════════ */
+.home-hero {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+.home-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3rem var(--pad) 5rem;
+}
+.home-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(2.4rem, 5.2vw, 6.3rem);
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(28px);
+  animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+}
+.home-tagline {
+  font-family: var(--mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-top: 2.2rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.8s forwards;
+}
+.home-right {
+  position: relative;
+  overflow: hidden;
+}
+.home-right img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: grayscale(12%);
+  transform: scale(1.06);
+  animation: zoomOut 2.2s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.home-scroll {
+  position: absolute;
+  bottom: 3rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  opacity: 0;
+  animation: fadeIn 1s ease 1.8s forwards;
+  z-index: 10;
+}
+.home-scroll-line {
+  width: 1px; height: 48px;
+  background: var(--ink);
+  animation: pulse 2s ease-in-out 2.2s infinite;
+}
+
+/* Statement strip */
+.home-statement {
+  padding: 9rem var(--pad);
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 6rem;
+  align-items: center;
+  border-top: 1px solid rgba(0,0,0,0.09);
+  background: var(--blue-mist);
+}
+.hs-quote {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(2rem, 3.8vw, 3.4rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+.hs-meta { display: flex; flex-direction: column; gap: 2.5rem; }
+.hs-item { border-top: 1px solid rgba(0,0,0,0.12); padding-top: 1.4rem; }
+.hs-label {
+  font-family: var(--mono);
+  font-size: 0.53rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 0.5rem;
+}
+.hs-val { font-family: var(--serif); font-weight: 300; font-size: 0.95rem; }
+
+/* Featured 3 */
+.home-preview { padding: 0 var(--pad) 9rem; }
+.hp-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 4rem;
+  border-top: 1px solid rgba(0,0,0,0.09);
+  padding-top: 2rem;
+}
+.hp-label { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); }
+.hp-cta {
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border-bottom: 1px solid var(--blue); padding-bottom: 1px;
+  opacity: 0.8; transition: opacity 0.3s, color 0.3s;
+}
+.hp-cta:hover { opacity: 1; color: var(--blue); }
+.hp-grid {
+  display: grid;
+  grid-template-columns: 5fr 4fr 5fr;
+  gap: 2rem;
+  align-items: start;
+}
+.hp-grid .hp-card:nth-child(2) { margin-top: 5rem; }
+.hp-card { cursor: none; }
+.hp-card-img { overflow: hidden; aspect-ratio: 3/4; }
+.hp-card-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), filter 0.5s;
+  filter: grayscale(10%);
+}
+.hp-card:hover .hp-card-img img { transform: scale(1.04); filter: grayscale(0%); }
+.hp-card-meta { padding: 1rem 0 0; }
+.hp-card-title { font-family: var(--serif); font-weight: 300; font-style: italic; font-size: 1rem; }
+.hp-card-info { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-top: 0.35rem; }
+
+/* Contact strip */
+.home-contact {
+  padding: 7rem var(--pad);
+  border-top: 1px solid rgba(0,0,0,0.09);
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.hc-heading { font-family: var(--display); font-weight: 400; font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; font-size: clamp(2rem, 4.9vw, 5.6rem); line-height: 1; }
+.hc-link {
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border-bottom: 1px solid var(--ink); padding-bottom: 2px;
+  transition: opacity 0.3s;
+}
+.hc-link:hover { opacity: 0.4; }
+
+/* ════════════ PORTFOLIO ════════════ */
+.portfolio-page { padding-top: 9rem; }
+.portfolio-header {
+  padding: 0 var(--pad) 5rem;
+  display: flex; justify-content: space-between; align-items: flex-end;
+}
+.portfolio-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: clamp(1.8rem, 3.5vw, 3.5rem);
+  line-height: 1;
+}
+.portfolio-desc {
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--blue);
+  max-width: 26ch; text-align: right; line-height: 1.9;
+}
+
+/* Masonry */
+.portfolio-grid {
+  padding: 0 var(--pad) 8rem;
+  columns: 3;
+  column-gap: 1.6rem;
+}
+.pg-item {
+  break-inside: avoid;
+  margin-bottom: 1.6rem;
+  cursor: none;
+}
+.pg-img-wrap { overflow: hidden; position: relative; }
+.pg-img-wrap img {
+  width: 100%; display: block;
+  filter: grayscale(10%);
+  transition: transform 0.85s cubic-bezier(0.16,1,0.3,1), filter 0.5s;
+}
+.pg-item:hover .pg-img-wrap img { transform: scale(1.04); filter: grayscale(0%); }
+.pg-overlay {
+  position: absolute; inset: 0;
+  background: var(--ink); opacity: 0;
+  transition: opacity 0.5s;
+}
+.pg-item:hover .pg-overlay { opacity: 0.06; }
+.pg-meta { padding: 0.85rem 0 0; }
+.pg-title { font-family: var(--serif); font-weight: 300; font-style: italic; font-size: 0.92rem; }
+.pg-info { font-family: var(--mono); font-size: 0.49rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-top: 0.28rem; }
+
+/* Lightbox */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(12,11,9,0.96);
+  z-index: 500;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 4rem;
+}
+.lightbox.open { display: flex; }
+.lightbox-inner {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1.5rem;
+  max-width: 80vw; max-height: 85vh;
+}
+.lightbox-inner img {
+  max-width: 100%; max-height: 76vh;
+  object-fit: contain;
+}
+.lb-meta { text-align: center; }
+.lb-title { font-family: var(--serif); font-weight: 300; font-style: italic; font-size: 1.2rem; color: #f6f4f1; }
+.lb-info { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(246,244,241,0.4); margin-top: 0.35rem; }
+.lb-close {
+  position: fixed; top: 2rem; right: 2.5rem;
+  font-family: var(--mono); font-size: 0.54rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(246,244,241,0.45); cursor: none;
+  transition: color 0.3s;
+}
+.lb-close:hover { color: #f6f4f1; }
+
+/* ════════════ ABOUT ════════════ */
+.about-page {
+  padding: 10rem var(--pad) 8rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 7rem; align-items: start;
+  min-height: 100vh;
+}
+.about-img-wrap { overflow: hidden; }
+.about-img-wrap img { width: 100%; display: block; filter: grayscale(12%); }
+.about-eyebrow { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 2rem; }
+.about-name { font-family: var(--display); font-weight: 400; font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; font-size: clamp(1.6rem, 2.8vw, 2.8rem); line-height: 1.1; margin-bottom: 3rem; }
+.about-text { font-family: var(--serif); font-weight: 300; font-size: 1.05rem; line-height: 1.78; opacity: 0.82; }
+.about-text + .about-text { margin-top: 1.5rem; }
+.about-details { margin-top: 4rem; display: flex; flex-direction: column; gap: 2rem; }
+.about-detail { border-top: 1px solid rgba(0,0,0,0.12); padding-top: 1.2rem; }
+.ad-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
+.ad-val { font-family: var(--serif); font-weight: 300; font-size: 0.95rem; }
+
+/* ════════════ INQUIRIES ════════════ */
+.inquiries-page {
+  min-height: 100vh;
+  padding: 10rem var(--pad) 8rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 7rem; align-items: start;
+}
+.inq-heading { font-family: var(--display); font-weight: 400; font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; font-size: clamp(1.8rem, 3.5vw, 4.2rem); line-height: 1.1; margin-bottom: 3rem; }
+.inq-body { font-family: var(--serif); font-weight: 300; font-size: 1rem; line-height: 1.75; opacity: 0.75; max-width: 38ch; }
+.inq-email {
+  display: inline-block; margin-top: 3rem;
+  font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--blue); text-decoration: none; border-bottom: 1px solid var(--blue); padding-bottom: 2px;
+  transition: opacity 0.3s;
+}
+.inq-email:hover { opacity: 0.6; }
+.inq-detail { border-top: 1px solid rgba(0,0,0,0.12); padding: 1.4rem 0; }
+.inq-detail:last-child { border-bottom: 1px solid rgba(0,0,0,0.12); }
+.inq-d-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
+.inq-d-val { font-family: var(--serif); font-weight: 300; font-size: 0.95rem; }
+
+.inq-photo {
+  margin-top: 3rem;
+  overflow: hidden;
+}
+.inq-photo img {
+  width: 100%;
+  display: block;
+  filter: grayscale(12%);
+}
+
+/* Form */
+.inq-form {
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.form-label {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+.form-input {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 0.92rem;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  padding: 0.6rem 0;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+  appearance: none;
+}
+.form-input:focus { border-color: var(--ink); }
+.form-input::placeholder { color: var(--mid); font-style: italic; }
+.form-select { cursor: none; }
+.form-textarea {
+  resize: none;
+  height: 100px;
+  font-family: var(--serif);
+}
+.form-btn {
+  align-self: flex-start;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--blue);
+  border: none;
+  padding: 0.9rem 2.2rem;
+  cursor: none;
+  transition: opacity 0.3s;
+}
+.form-btn:hover { opacity: 0.75; }
+.form-note {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  color: var(--mid);
+  min-height: 1rem;
+}
+
+/* ── Footer ── */
+footer { padding: 2rem var(--pad); border-top: 1px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; }
+footer span { font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); }
+
+/* ── Animations ── */
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 0.35; } }
+@keyframes zoomOut { to { transform: scale(1); } }
+@keyframes pulse { 0%,100% { opacity:1; transform:scaleY(1); } 50% { opacity:0.25; transform:scaleY(0.35); } }
+
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  :root { --pad: 1.5rem; }
+
+  /* Nav */
+  nav { padding: 1.6rem var(--pad); }
+  .nav-links { gap: 1.6rem; }
+
+  /* Hero */
+  .home-hero { grid-template-columns: 1fr; grid-template-rows: auto 50vh; }
+  .home-left { padding: 7rem var(--pad) 3rem; justify-content: flex-start; }
+  .home-scroll { display: none; }
+
+  /* Statement */
+  .home-statement { grid-template-columns: 1fr; gap: 3rem; padding: 5rem var(--pad); }
+
+  /* Preview */
+  .hp-grid { grid-template-columns: 1fr 1fr; }
+  .hp-grid .hp-card:nth-child(2) { margin-top: 3rem; }
+  .hp-grid .hp-card:nth-child(3) { display: none; }
+  .home-preview { padding: 0 var(--pad) 5rem; }
+
+  /* Contact */
+  .home-contact { flex-direction: column; align-items: flex-start; gap: 2rem; padding: 5rem var(--pad); }
+
+  /* Portfolio */
+  .portfolio-grid { columns: 2; column-gap: 1.2rem; }
+  .portfolio-header { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 0 var(--pad) 3rem; }
+  .portfolio-desc { text-align: left; }
+  .portfolio-page { padding-top: 7rem; }
+
+  /* About */
+  .about-page { grid-template-columns: 1fr; gap: 3rem; padding: 7rem var(--pad) 5rem; }
+
+  /* Inquiries */
+  .inquiries-page { grid-template-columns: 1fr; gap: 3rem; padding: 7rem var(--pad) 5rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .inq-photo { display: none; }
+
+  /* Lightbox */
+  .lightbox { padding: 2rem 1.2rem; }
+  .lightbox-inner { max-width: 95vw; }
+  .lightbox-inner img { max-height: 65vh; }
+}
+
+@media (max-width: 600px) {
+  :root { --pad: 1.2rem; }
+
+  /* Nav — tighten */
+  nav { padding: 1.4rem var(--pad); }
+  .nav-logo { font-size: 0.7rem; }
+  .nav-links { gap: 1.2rem; }
+  .nav-links a { font-size: 0.52rem; }
+
+  /* Hero */
+  .home-hero { grid-template-rows: auto 45vh; }
+  .home-left { padding: 6rem var(--pad) 2.5rem; }
+  .home-title { font-size: clamp(2rem, 11vw, 3.5rem); letter-spacing: 0.04em; }
+  .home-tagline { font-size: 0.5rem; margin-top: 1.2rem; }
+
+  /* Statement */
+  .home-statement { padding: 4rem var(--pad); }
+  .hs-quote { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+
+  /* Preview */
+  .hp-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .hp-grid .hp-card:nth-child(2) { margin-top: 0; display: block; }
+  .hp-grid .hp-card:nth-child(3) { display: none; }
+  .hp-header { margin-bottom: 2.5rem; }
+
+  /* Contact */
+  .home-contact { padding: 4rem var(--pad); }
+  .hc-heading { font-size: clamp(2rem, 10vw, 4rem); }
+
+  /* Portfolio */
+  .portfolio-grid { columns: 1; }
+  .portfolio-page { padding-top: 6rem; }
+  .portfolio-title { font-size: clamp(1.8rem, 8vw, 3rem); }
+
+  /* About */
+  .about-page { padding: 6rem var(--pad) 4rem; gap: 2.5rem; }
+  .about-name { font-size: clamp(1.5rem, 7vw, 2.5rem); }
+  .about-text { font-size: 1rem; }
+
+  /* Inquiries */
+  .inquiries-page { padding: 6rem var(--pad) 4rem; gap: 2.5rem; }
+  .inq-heading { font-size: clamp(1.8rem, 8vw, 3.5rem); }
+  .inq-body { font-size: 0.95rem; }
+  .form-btn { width: 100%; text-align: center; }
+
+  /* Footer */
+  footer { flex-direction: column; gap: 0.5rem; padding: 1.5rem var(--pad); }
+
+  /* Lightbox */
+  .lb-close { top: 1.2rem; right: 1.2rem; }
+
+  /* Cursor — hide on touch */
+  #cur, #cur-dot { display: none; }
+  body { cursor: auto; }
+  a, button, .pg-item, .hp-card { cursor: pointer; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-dot"></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <span class="lb-close" id="lb-close">Close ✕</span>
+  <div class="lightbox-inner">
+    <img id="lb-img" src="" alt="">
+    <div class="lb-meta">
+      <p class="lb-title" id="lb-title"></p>
+      <p class="lb-info" id="lb-info"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo" data-page="home">Izabella Shealy</a>
+  <ul class="nav-links">
+    <li><a href="#" data-page="portfolio">Works</a></li>
+    <li><a href="#" data-page="about">About</a></li>
+    <li><a href="#" data-page="inquiries">Inquiries</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <section class="home-hero">
+    <div class="home-left">
+      <h1 class="home-title">Izabella<br>Shealy</h1>
+      <p class="home-tagline">Painter &nbsp;·&nbsp; Brooklyn, New York</p>
+    </div>
+    <div class="home-right">
+      <img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/6edcb854-cf06-45f0-b10f-219227af9cf3/23E2B3BC-C925-4401-850C-76545C119C88.JPG" alt="Izabella Shealy">
+    </div>
+    <div class="home-scroll"><div class="home-scroll-line"></div></div>
+  </section>
+
+  <section class="home-statement">
+    <p class="hs-quote reveal">Painting from memory,<br>light, and the places<br>that stay with you.</p>
+    <div class="hs-meta">
+      <div class="hs-item reveal"><p class="hs-label">Medium</p><p class="hs-val">Oil on canvas &amp; wood panel</p></div>
+      <div class="hs-item reveal" style="transition-delay:.1s"><p class="hs-label">Based</p><p class="hs-val">Brooklyn, New York</p></div>
+      <div class="hs-item reveal" style="transition-delay:.2s"><p class="hs-label">Available</p><p class="hs-val">Originals &amp; commissions upon inquiry</p></div>
+    </div>
+  </section>
+
+  <section class="home-preview">
+    <div class="hp-header">
+      <span class="hp-label">Selected Works</span>
+      <a href="#" class="hp-cta" data-page="portfolio">View all</a>
+    </div>
+    <div class="hp-grid">
+      <div class="hp-card reveal">
+        <div class="hp-card-img"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/c3405342-0b35-4790-a686-f3a8ad8ac84b/0DB15617-A204-4EEA-8857-E6055E6BFE7D.JPG" alt="Dreamscape"></div>
+        <div class="hp-card-meta"><p class="hp-card-title">Dreamscape</p><p class="hp-card-info">Oil on Canvas</p></div>
+      </div>
+      <div class="hp-card reveal" style="transition-delay:.15s">
+        <div class="hp-card-img"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/144de79a-de1b-4a03-a740-b8d340d67413/DA8DB6F0-2D24-4771-A4D8-9667B3A91034.png" alt="Henry in Shade"></div>
+        <div class="hp-card-meta"><p class="hp-card-title">Henry in Shade</p><p class="hp-card-info">Oil on Canvas</p></div>
+      </div>
+      <div class="hp-card reveal" style="transition-delay:.3s">
+        <div class="hp-card-img"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/5ad85ac0-cb6b-4df2-84d3-65ddd8063ccf/026277F4-2841-4891-8A5D-50CE578F69E0.JPG" alt="You Miss California"></div>
+        <div class="hp-card-meta"><p class="hp-card-title">You Miss California</p><p class="hp-card-info">Oil on Canvas</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-contact">
+    <h2 class="hc-heading reveal">Inquire.</h2>
+    <a href="#" class="hc-link" data-page="inquiries">Get in touch</a>
+  </section>
+
+  <footer><span>© 2025 Izabella Shealy</span><span>All rights reserved</span></footer>
+</div>
+
+<!-- ══ PORTFOLIO ══ -->
+<div class="page" id="page-portfolio">
+  <div class="portfolio-page">
+    <div class="portfolio-header">
+      <h1 class="portfolio-title">Works</h1>
+      <p class="portfolio-desc">Oil on canvas and wood.<br>Click any work for a full view.</p>
+    </div>
+    <div class="portfolio-grid">
+
+      <div class="pg-item" data-title="Abstract 1" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/1768747555316-CKBJBHLGBBO1U177CX1V/78CC3679-4C5D-43E4-B3AF-30D570D9424F.png">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/1768747555316-CKBJBHLGBBO1U177CX1V/78CC3679-4C5D-43E4-B3AF-30D570D9424F.png" alt="Abstract 1"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Abstract 1</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Henry in Shade" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/144de79a-de1b-4a03-a740-b8d340d67413/DA8DB6F0-2D24-4771-A4D8-9667B3A91034.png">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/144de79a-de1b-4a03-a740-b8d340d67413/DA8DB6F0-2D24-4771-A4D8-9667B3A91034.png" alt="Henry in Shade"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Henry in Shade</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Southern California, Southern Utah" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/c64224d4-12e5-4574-9fb3-7e25166b5487/2F568B40-ABC1-48AA-8F0E-939CA5CA0B2E.png">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/c64224d4-12e5-4574-9fb3-7e25166b5487/2F568B40-ABC1-48AA-8F0E-939CA5CA0B2E.png" alt="Southern California, Southern Utah"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Southern California, Southern Utah</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Car Wash" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/b7c6931e-e4af-4030-a0ee-89616e7c4d30/B07E5CF5-B2AF-4E1E-A394-81DA3E569FA0.png">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/b7c6931e-e4af-4030-a0ee-89616e7c4d30/B07E5CF5-B2AF-4E1E-A394-81DA3E569FA0.png" alt="Car Wash"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Car Wash</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Christian Science Reading Room" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/f0c41829-8082-46c6-ac8b-9c234f326176/F85F81DB-A0A6-475C-99C4-A245EEED0FA7.JPG">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/f0c41829-8082-46c6-ac8b-9c234f326176/F85F81DB-A0A6-475C-99C4-A245EEED0FA7.JPG" alt="Christian Science Reading Room"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Christian Science Reading Room</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Dreamscape" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/c3405342-0b35-4790-a686-f3a8ad8ac84b/0DB15617-A204-4EEA-8857-E6055E6BFE7D.JPG">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/c3405342-0b35-4790-a686-f3a8ad8ac84b/0DB15617-A204-4EEA-8857-E6055E6BFE7D.JPG" alt="Dreamscape"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Dreamscape</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Mussels" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/0827b0f1-33ff-4df8-b0d7-8d068b48e77e/BC85D36D-30D5-4F07-A875-A39B6E8161DE.png">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/0827b0f1-33ff-4df8-b0d7-8d068b48e77e/BC85D36D-30D5-4F07-A875-A39B6E8161DE.png" alt="Mussels"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Mussels</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Beachwood" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/7d102554-5007-4064-b005-1c646a7528c6/8B623A7A-9E37-448E-97B7-9DD71F2911CE.JPG">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/7d102554-5007-4064-b005-1c646a7528c6/8B623A7A-9E37-448E-97B7-9DD71F2911CE.JPG" alt="Beachwood"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Beachwood</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Botanic Gardens" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/32710356-88d8-4a46-b3a1-22eca14c76d0/81BF2AC9-F583-43D4-8599-4FD064A2A146.png">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/32710356-88d8-4a46-b3a1-22eca14c76d0/81BF2AC9-F583-43D4-8599-4FD064A2A146.png" alt="Botanic Gardens"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Botanic Gardens</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="You Miss California" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/5ad85ac0-cb6b-4df2-84d3-65ddd8063ccf/026277F4-2841-4891-8A5D-50CE578F69E0.JPG">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/5ad85ac0-cb6b-4df2-84d3-65ddd8063ccf/026277F4-2841-4891-8A5D-50CE578F69E0.JPG" alt="You Miss California"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">You Miss California</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Redwood" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/8e547b99-1993-4eae-8242-5efad868dc27/09B2136D-E4D4-40DF-9828-AECCB991239B.JPG">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/8e547b99-1993-4eae-8242-5efad868dc27/09B2136D-E4D4-40DF-9828-AECCB991239B.JPG" alt="Redwood"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Redwood</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+      <div class="pg-item" data-title="Pastoral" data-info="Oil on Canvas" data-src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/0c544788-b112-4746-a7b9-ba7b6385f8a7/DB7F3F64-A44E-457A-8BDC-A8540E7AF0ED.JPG">
+        <div class="pg-img-wrap"><img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/0c544788-b112-4746-a7b9-ba7b6385f8a7/DB7F3F64-A44E-457A-8BDC-A8540E7AF0ED.JPG" alt="Pastoral"><div class="pg-overlay"></div></div>
+        <div class="pg-meta"><p class="pg-title">Pastoral</p><p class="pg-info">Oil on Canvas</p></div>
+      </div>
+
+    </div>
+    <footer><span>© 2025 Izabella Shealy</span><span>All rights reserved</span></footer>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<div class="page" id="page-about">
+  <div class="about-page">
+    <div class="about-img-wrap reveal">
+      <img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/9651a902-6782-407b-968a-374af1158934/Bella_02.jpg" alt="Izabella Shealy">
+    </div>
+    <div class="about-content">
+      <p class="about-eyebrow">About</p>
+      <h1 class="about-name reveal">Izabella<br>Shealy</h1>
+      <p class="about-text reveal">Izabella Shealy is a self-taught painter whose work draws from memory and place — the particular quality of light in California, the open expanses of the Mountain West, and the quiet textures of everyday life.</p>
+      <p class="about-text reveal" style="transition-delay:.1s">Working in oil on canvas and wood panel, she moves between observation and feeling, returning often to landscapes, interiors, and figures that resist easy resolution. She lives and works in Brooklyn, New York.</p>
+      <div class="about-details">
+        <div class="about-detail reveal" style="transition-delay:.15s"><p class="ad-label">Medium</p><p class="ad-val">Oil on canvas &amp; wood panel</p></div>
+        <div class="about-detail reveal" style="transition-delay:.2s"><p class="ad-label">Based</p><p class="ad-val">Brooklyn, New York</p></div>
+        <div class="about-detail reveal" style="transition-delay:.25s"><p class="ad-label">Inquiries</p><p class="ad-val">Commissions, shows &amp; purchases welcome</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INQUIRIES ══ -->
+<div class="page" id="page-inquiries">
+  <div class="inquiries-page">
+    <div class="inq-left">
+      <h1 class="inq-heading reveal">Inquiries.</h1>
+      <p class="inq-body reveal" style="transition-delay:.1s">To reach out about commissions, presenting work in shows, or purchases, please use the form below or contact directly by email.</p>
+      <a href="mailto:hello@izabellashealy.com" class="inq-email reveal" style="transition-delay:.2s">hello@izabellashealy.com</a>
+      <div class="inq-photo reveal" style="transition-delay:.3s">
+        <img src="https://images.squarespace-cdn.com/content/v1/696ceda6d2f6ec32eeb66074/065b143d-961a-42ad-8637-930dc425d213/5912A040-DA15-40F6-A445-6727E26B523F.JPG" alt="Studio">
+      </div>
+    </div>
+    <div class="inq-right">
+      <div class="inq-detail reveal"><p class="inq-d-label">Commissions</p><p class="inq-d-val">Open to commission inquiries. Please share your vision, preferred size, and timeline.</p></div>
+      <div class="inq-detail reveal" style="transition-delay:.1s"><p class="inq-d-label">Shows</p><p class="inq-d-val">Available for group and solo exhibition inquiries.</p></div>
+      <div class="inq-detail reveal" style="transition-delay:.15s"><p class="inq-d-label">Purchases</p><p class="inq-d-val">Selected originals available. Please inquire for availability and pricing.</p></div>
+      <div class="inq-detail reveal" style="transition-delay:.2s"><p class="inq-d-label">Response Time</p><p class="inq-d-val">Typically within 2–3 business days.</p></div>
+
+      <form class="inq-form reveal" style="transition-delay:.25s" onsubmit="handleForm(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" placeholder="Your name" required>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="your@email.com" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Subject</label>
+          <select class="form-input form-select">
+            <option value="">Select a reason</option>
+            <option>Commission</option>
+            <option>Purchase</option>
+            <option>Show / Exhibition</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Message</label>
+          <textarea class="form-input form-textarea" placeholder="Tell me about your inquiry…" required></textarea>
+        </div>
+        <button type="submit" class="form-btn">Send</button>
+        <p class="form-note" id="form-note"></p>
+      </form>
+    </div>
+  </div>
+  <footer><span>© 2025 Izabella Shealy</span><span>All rights reserved</span></footer>
+</div>
+
+<script>
+// Cursor
+const cur = document.getElementById('cur');
+const dot = document.getElementById('cur-dot');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+  dot.style.left = e.clientX + 'px';
+  dot.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, .pg-item, .hp-card, .lb-close').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('big'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+});
+
+// Page routing
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const navLink = document.querySelector(`.nav-links [data-page="${id}"]`);
+  if (navLink) navLink.classList.add('active');
+  window.scrollTo(0, 0);
+  setTimeout(() => {
+    document.querySelectorAll('#page-' + id + ' .reveal').forEach(el => {
+      const ob = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ob.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      ob.observe(el);
+    });
+  }, 60);
+}
+
+document.querySelectorAll('[data-page]').forEach(el => {
+  el.addEventListener('click', e => { e.preventDefault(); showPage(el.dataset.page); });
+});
+
+// Lightbox
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbTitle = document.getElementById('lb-title');
+const lbInfo = document.getElementById('lb-info');
+
+document.querySelectorAll('.pg-item').forEach(item => {
+  item.addEventListener('click', () => {
+    lbImg.src = item.dataset.src;
+    lbTitle.textContent = item.dataset.title;
+    lbInfo.textContent = item.dataset.info;
+    lightbox.classList.add('open');
+  });
+});
+document.getElementById('lb-close').addEventListener('click', () => lightbox.classList.remove('open'));
+lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+
+// Form
+function handleForm(e) {
+  e.preventDefault();
+  const note = document.getElementById('form-note');
+  note.textContent = 'Thank you — your message has been sent.';
+  e.target.reset();
+}
+
+// Init
+showPage('home');
+</script>
+</body>
+</html>
